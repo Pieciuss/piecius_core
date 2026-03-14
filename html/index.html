@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piecius Core</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div id="player-select-container" class="hidden">
+        <div class="select-panel">
+            <div class="select-header">
+                <h2>Pokaż dowód</h2>
+                <div class="select-close" id="btn-close-select">✕</div>
+            </div>
+            <div class="select-body">
+                <div class="select-list" id="player-list"></div>
+            </div>
+            <div class="select-footer">
+                <button class="btn-show-all" id="btn-show-all">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+                        <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    </svg>
+                    Pokaż wszystkim w pobliżu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="dowod-container" class="hidden">
+        <div class="dowod-card">
+            <div class="dowod-header">
+                <div class="dowod-accent"></div>
+                <div class="dowod-title">
+                    <span class="dowod-country">STATE OF SAN ANDREAS</span>
+                    <h1>IDENTIFICATION CARD</h1>
+                </div>
+                <div class="dowod-emblem">
+                    <svg width="40" height="40" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(212,164,76,0.35)" stroke-width="1.5"/>
+                        <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(212,164,76,0.15)" stroke-width="1"/>
+                        <text x="50" y="57" text-anchor="middle" fill="rgba(212,164,76,0.5)" font-size="22" font-weight="700" font-family="Inter, sans-serif">SA</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="dowod-body">
+                <div class="dowod-photo">
+                    <div class="photo-placeholder">
+                        <svg width="44" height="44" viewBox="0 0 24 24" fill="rgba(255,255,255,0.12)">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="dowod-info">
+                    <div class="info-group">
+                        <div class="info-row">
+                            <span class="info-label">Imię</span>
+                            <span class="info-value" id="dowod-imie">—</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Nazwisko</span>
+                            <span class="info-value" id="dowod-nazwisko">—</span>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-row-inline">
+                            <div class="info-col">
+                                <span class="info-label">Data urodzenia</span>
+                                <span class="info-value" id="dowod-data">—</span>
+                            </div>
+                            <div class="info-col">
+                                <span class="info-label">Płeć</span>
+                                <span class="info-value" id="dowod-plec">—</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Nr telefonu</span>
+                        <span class="info-value" id="dowod-telefon">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dowod-footer">
+                <div class="footer-grid">
+                    <div class="footer-item">
+                        <span class="footer-label">SSN</span>
+                        <span class="footer-value" id="dowod-ssn">—</span>
+                    </div>
+                    <div class="footer-item">
+                        <span class="footer-label">Zatrudnienie</span>
+                        <span class="footer-value" id="dowod-praca">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dowod-timer" id="dowod-timer"></div>
+        </div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
