@@ -8,7 +8,7 @@ function ForceDeleteVehicle(vehicle, ped)
 
     if ped and GetVehiclePedIsIn(ped, false) == vehicle then
         TaskLeaveVehicle(ped, vehicle, 16)
-        FW.Notify('~r~Ten pojazd jest zablokowany na tym serwerze!')
+        FW.Notify('~r~This vehicle is blocked on this server!')
         Wait(1500)
     end
 

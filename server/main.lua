@@ -24,11 +24,11 @@ end
 
 local function GiveKey(source, plate, vehicleLabel)
     local normalizedPlate = NormalizePlate(plate)
-    local label = vehicleLabel or 'Pojazd'
+    local label = vehicleLabel or 'Vehicle'
     local metadata = {
         plate = normalizedPlate,
-        description = 'Rejestracja: **' .. normalizedPlate .. '**\nPojazd: ' .. label,
-        label = 'Kluczyk [' .. normalizedPlate .. ']'
+        description = 'Registration: **' .. normalizedPlate .. '**\nVehicle: ' .. label,
+        label = 'Key [' .. normalizedPlate .. ']'
     }
 
     local success, result = pcall(function()
@@ -48,12 +48,12 @@ end
 FW.RegisterCallback('Piecius_core:hasKey', function(source, cb, plate)
     local xPlayer = FW.GetPlayer(source)
     if not xPlayer then
-        print('[Piecius_core] hasKey: brak xPlayer dla source=' .. tostring(source))
+        print('[Piecius_core] hasKey: no xPlayer for source=' .. tostring(source))
         return cb(false)
     end
 
     local normalizedPlate = NormalizePlate(plate)
-    print('[Piecius_core] hasKey: sprawdzam plate="' .. tostring(plate) .. '" normalized="' .. normalizedPlate .. '" dla gracza ' .. xPlayer.getName())
+    print('[Piecius_core] hasKey: checking plate="' .. tostring(plate) .. '" normalized="' .. normalizedPlate .. '" for player ' .. xPlayer.getName())
 
     local hasKeyItem = false
     local searchOk, searchResult = pcall(function()
@@ -67,20 +67,20 @@ FW.RegisterCallback('Piecius_core:hasKey', function(source, cb, plate)
             for _, item in pairs(searchResult) do
                 if item and item.metadata and item.metadata.plate then
                     local keyPlate = NormalizePlate(item.metadata.plate)
-                    print('[Piecius_core] hasKey: porownuje kluczyk plate="' .. keyPlate .. '" z "' .. normalizedPlate .. '"')
+                    print('[Piecius_core] hasKey: comparing key plate="' .. keyPlate .. '" with "' .. normalizedPlate .. '"')
                     if keyPlate == normalizedPlate then
                         hasKeyItem = true
                         break
                     end
                 else
-                    print('[Piecius_core] hasKey: kluczyk bez metadata.plate: ' .. tostring(item and item.metadata and type(item.metadata)))
+                    print('[Piecius_core] hasKey: key without metadata.plate: ' .. tostring(item and item.metadata and type(item.metadata)))
                 end
             end
         end
     end
 
     if hasKeyItem then
-        print('[Piecius_core] hasKey: ZNALEZIONO kluczyk w inventory -> true')
+        print('[Piecius_core] hasKey: FOUND key in inventory -> true')
         return cb(true)
     end
 
@@ -93,11 +93,11 @@ FW.RegisterCallback('Piecius_core:hasKey', function(source, cb, plate)
     print('[Piecius_core] hasKey: DB check ok=' .. tostring(dbOk) .. ' result=' .. tostring(dbResult))
 
     if dbOk and dbResult and tonumber(dbResult) > 0 then
-        print('[Piecius_core] hasKey: WLASCICIEL w bazie -> true')
+        print('[Piecius_core] hasKey: OWNER in database -> true')
         return cb(true)
     end
 
-    print('[Piecius_core] hasKey: BRAK kluczyka i nie wlasciciel -> false')
+    print('[Piecius_core] hasKey: NO key and not owner -> false')
     cb(false)
 end)
 
@@ -194,11 +194,11 @@ AddEventHandler('Piecius_core:showDowodToAll', function(targetIds)
     end)
 end)
 
-RegisterCommand('dajkluczyk', function(source, args, rawCommand)
+RegisterCommand('givekey', function(source, args, rawCommand)
     local xPlayer = FW.GetPlayer(source)
 
     if not xPlayer or xPlayer.getGroup() ~= 'admin' then
-        FW.NotifyClient(source, '~r~Brak uprawnien!')
+        FW.NotifyClient(source, '~r~No permissions!')
         return
     end
 
@@ -206,13 +206,13 @@ RegisterCommand('dajkluczyk', function(source, args, rawCommand)
     local plate = args[2]
 
     if not targetId or not plate then
-        FW.NotifyClient(source, '~r~Uzycie: /dajkluczyk [id] [tablica]')
+        FW.NotifyClient(source, '~r~Usage: /givekey [id] [plate]')
         return
     end
 
     local targetPlayer = FW.GetPlayer(targetId)
     if not targetPlayer then
-        FW.NotifyClient(source, '~r~Nie znaleziono gracza!')
+        FW.NotifyClient(source, '~r~Player not found!')
         return
     end
 
@@ -221,30 +221,30 @@ RegisterCommand('dajkluczyk', function(source, args, rawCommand)
     MySQL.Async.fetchAll("SELECT vehicle FROM owned_vehicles WHERE UPPER(REPLACE(TRIM(plate), ' ', '')) = @plate LIMIT 1", {
         ['@plate'] = normalizedPlate
     }, function(result)
-        local vehicleLabel = 'Pojazd'
+        local vehicleLabel = 'Vehicle'
         if result and #result > 0 and result[1].vehicle then
             local vehData = result[1].vehicle
             if type(vehData) == 'string' then
                 local model = vehData:match('"model"%s*:%s*(%d+)')
                 if model then
-                    vehicleLabel = 'Pojazd #' .. normalizedPlate
+                    vehicleLabel = 'Vehicle #' .. normalizedPlate
                 end
             end
         end
 
         GiveKey(targetId, normalizedPlate, vehicleLabel)
-        FW.NotifyClient(source, '~g~Dano kluczyk z tablica: ' .. normalizedPlate)
-        FW.NotifyClient(targetId, '~g~Otrzymales kluczyk do pojazdu: ' .. normalizedPlate)
+        FW.NotifyClient(source, '~g~Gave a key with plate: ' .. normalizedPlate)
+        FW.NotifyClient(targetId, '~g~You received a vehicle key: ' .. normalizedPlate)
     end)
 end, true)
 
-RegisterCommand('zrobkluczyk', function(source, args, rawCommand)
+RegisterCommand('makekey', function(source, args, rawCommand)
     local xPlayer = FW.GetPlayer(source)
     if not xPlayer then return end
 
     local plate = args[1]
     if not plate then
-        FW.NotifyClient(source, '~r~Uzycie: /zrobkluczyk [tablica]')
+        FW.NotifyClient(source, '~r~Usage: /makekey [plate]')
         return
     end
 
@@ -255,27 +255,27 @@ RegisterCommand('zrobkluczyk', function(source, args, rawCommand)
         ['@plate'] = normalizedPlate
     }, function(result)
         if result and #result > 0 then
-            GiveKey(source, normalizedPlate, 'Pojazd #' .. normalizedPlate)
-            FW.NotifyClient(source, '~g~Zrobiono kluczyk do pojazdu: ' .. normalizedPlate)
+            GiveKey(source, normalizedPlate, 'Vehicle #' .. normalizedPlate)
+            FW.NotifyClient(source, '~g~Made a key for vehicle: ' .. normalizedPlate)
         else
-            FW.NotifyClient(source, '~r~Nie jestes wlascicielem tego pojazdu!')
+            FW.NotifyClient(source, '~r~You are not the owner of this vehicle!')
         end
     end)
 end, false)
 
-RegisterCommand('dajklucz', function(source, args, rawCommand)
+RegisterCommand('handkey', function(source, args, rawCommand)
     local xPlayer = FW.GetPlayer(source)
     if not xPlayer then return end
 
     local targetId = tonumber(args[1])
     if not targetId then
-        FW.NotifyClient(source, '~r~Uzycie: /dajklucz [id_gracza]')
+        FW.NotifyClient(source, '~r~Usage: /handkey [player_id]')
         return
     end
 
     local targetPlayer = FW.GetPlayer(targetId)
     if not targetPlayer then
-        FW.NotifyClient(source, '~r~Nie znaleziono gracza!')
+        FW.NotifyClient(source, '~r~Player not found!')
         return
     end
 
@@ -289,12 +289,12 @@ RegisterCommand('dajklucz', function(source, args, rawCommand)
         local plate = metadata.plate or 'UNKNOWN'
 
         exports.ox_inventory:RemoveItem(source, Config.KeyItem, 1, metadata, keyItem.slot)
-        GiveKey(targetId, plate, 'Pojazd #' .. plate)
+        GiveKey(targetId, plate, 'Vehicle #' .. plate)
 
-        FW.NotifyClient(source, '~g~Dales kluczyk [' .. plate .. '] graczowi ID: ' .. targetId)
-        FW.NotifyClient(targetId, '~g~Otrzymales kluczyk do pojazdu: ' .. plate)
+        FW.NotifyClient(source, '~g~Gave key [' .. plate .. '] to player ID: ' .. targetId)
+        FW.NotifyClient(targetId, '~g~You received a vehicle key: ' .. plate)
     else
-        FW.NotifyClient(source, '~r~Nie masz zadnego kluczyka!')
+        FW.NotifyClient(source, '~r~You don\'t have any key!')
     end
 end, false)
 
@@ -306,12 +306,12 @@ AddEventHandler('Piecius_core:hotwireSuccess', function(plate)
     local normalizedPlate = NormalizePlate(plate)
 
     if PlayerHasKey(src, normalizedPlate) then
-        print('[Piecius_core] Hotwire: gracz ' .. src .. ' juz ma kluczyk do ' .. normalizedPlate)
+        print('[Piecius_core] Hotwire: player ' .. src .. ' already has key for ' .. normalizedPlate)
         return
     end
 
-    print('[Piecius_core] Hotwire sukces: gracz ' .. src .. ' dostal kluczyk do ' .. normalizedPlate)
+    print('[Piecius_core] Hotwire success: player ' .. src .. ' got key for ' .. normalizedPlate)
     GiveKey(src, normalizedPlate, 'Hotwire')
 end)
 
-print('[^2Piecius_core^0] Zaladowano pomyslnie!')
+print('[^2Piecius_core^0] Loaded successfully!')

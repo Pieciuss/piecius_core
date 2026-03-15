@@ -7,7 +7,7 @@ Vehicle management system with key system, hotwire, ID cards, and dispatch contr
 - **Vehicle Blocking** — Automatically removes military, Arena War, and non-RP vehicles
 - **Key System** — Vehicle keys as inventory items with lock/unlock functionality
 - **Hotwire** — Attempt to hotwire vehicles without keys (configurable chance)
-- **ID Card (Dowód)** — Show your ID card to nearby players
+- **ID Card** — Show your ID card to nearby players
 - **Dispatch Control** — Disable wanted level, dispatch services, and emergency spawns
 - **Military Base Cleanup** — Removes NPC vehicles from Fort Zancudo area
 
@@ -30,7 +30,7 @@ Vehicle management system with key system, hotwire, ID cards, and dispatch contr
 Edit `config.lua` to customize:
 
 - `Config.BlockedVehicles` — List of vehicle models to auto-delete
-- `Config.KeyItem` — Inventory item name for keys (default: `'kluczyk'`)
+- `Config.KeyItem` — Inventory item name for keys (default: `'key'`)
 - `Config.LockDistance` — Max distance to lock/unlock vehicles
 - `Config.HotwireEnabled` — Enable/disable hotwire system
 - `Config.HotwireChance` — Success chance percentage
@@ -42,10 +42,10 @@ Edit `config.lua` to customize:
 
 | Command | Description |
 |---------|-------------|
-| `/dowod` | Show your ID card to nearby players |
-| `/dajkluczyk [id] [plate]` | Give a key to player (admin) |
-| `/zrobkluczyk [plate]` | Make a key for your own vehicle |
-| `/dajklucz [id]` | Give your key to another player |
+| `/id` | Show your ID card to nearby players |
+| `/givekey [id] [plate]` | Give a key to player (admin) |
+| `/makekey [plate]` | Make a key for your own vehicle |
+| `/handkey [id]` | Give your key to another player |
 
 ## Keybinds
 

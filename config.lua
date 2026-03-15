@@ -64,7 +64,7 @@ Config.MilitaryBaseZone = {
     radius = 450.0
 }
 
-Config.KeyItem = 'kluczyk'
+Config.KeyItem = 'key'
 Config.LockDistance = 5.0
 Config.LockSound = true
 
@@ -78,6 +78,6 @@ Config.DisableWantedLevel = true
 Config.DisableDispatch = true
 Config.DisableEmergencySpawns = true
 
-Config.DowodCommand = 'dowod'
+Config.DowodCommand = 'id'
 Config.DowodShowTime = 10000
 Config.DowodRadius = 5.0
